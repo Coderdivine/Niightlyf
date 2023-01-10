@@ -39,7 +39,7 @@ router.post("/create-admin",async (req,res,next)=>{
                     const newUser = new Users({
                         username,
                         user_id,
-                        passowrd:hash
+                        password:hash
                     });
                     const saveRes = await newUser.save();
                     const token = await jwt.sign({username,user_id},process.env.HASH)
