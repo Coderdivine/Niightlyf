@@ -25,7 +25,7 @@ async function generateLetters() {
 router.post("/create-admin",async (req,res,next)=>{
     try{
         let { username,password } = req.body;
-        let user_id = generateLetters()//uuidv4.v4();
+        let user_id = await generateLetters()//uuidv4.v4();
         if(username.length > 4){
             const exist = await Users.find({username});
             console.log({exist});
@@ -34,6 +34,7 @@ router.post("/create-admin",async (req,res,next)=>{
           }else{
             if(password !== ""){
                 const hash = await bcrypt.hash(password,10);
+                console.log({hash})
                 if(hash){
                     const newUser = new Users({
                         username,
@@ -68,7 +69,7 @@ router.post("/create-post",async(req,res,next)=>{
     try{
         let { title,description,user_id } = req.body;
         if(title){
-            let question_id = generateLetters();
+            let question_id = await generateLetters();
             const createPost = new Response({
                 user_id,question_id,
                 title,description,
