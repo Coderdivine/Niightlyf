@@ -11,18 +11,28 @@ const {
     Response
 } = require("../Model/NightLyfSchema");
 
-//Create Admin...
+async function generateLetters() {
+    const letters = 'abcdefghijklmnopqrstuvwxyz';
+    let result = '';
+  
+    for (let i = 0; i < 9; i++) {
+      result += letters[Math.floor(Math.random() * letters.length)];
+    }
+  
+    return result.slice(0, 3) + '-' + result.slice(3, 6) + '-' + result.slice(6);
+}
+///Create Admin...
 router.post("/create-admin",async (req,res,next)=>{
     try{
         let { username,password } = req.body;
-        let user_id = uuidv4.v4();
+        let user_id = generateLetters()//uuidv4.v4();
         if(username.length > 4){
             const exist = await Users.find({username});
             console.log({exist});
           if(exist.length){
             next("Username already exists")
           }else{
-            if(password.length < 5){
+            if(password !== ""){
                 const hash = await bcrypt.hash(password,10);
                 if(hash){
                     const newUser = new Users({
@@ -42,7 +52,7 @@ router.post("/create-admin",async (req,res,next)=>{
                     }
                 }
             }else{
-                next("Password must be greate than 5")
+                next("Password must be greater than 5")
             }
           }
         }else{
@@ -58,7 +68,7 @@ router.post("/create-post",async(req,res,next)=>{
     try{
         let { title,description,user_id } = req.body;
         if(title){
-            let question_id = uuidv4.v4();
+            let question_id = generateLetters();
             const createPost = new Response({
                 user_id,question_id,
                 title,description,
@@ -120,7 +130,7 @@ router.post("/answer",async(req,res,next)=>{
 });
 
 //Get all responses...
-router.get("/get-response",async(req,res,next)=>{
+router.get("/get-response/:question_id",async(req,res,next)=>{
     try{
         const answers = await Response.findOne({question_id:req.params.question_id});
         if(answers){
@@ -137,9 +147,9 @@ router.get("/get-response",async(req,res,next)=>{
 });
 
 //Get all questions...
-router.get("/get-questions",async(req,res)=>{
+router.get("/get-questions/:user_id",async(req,res)=>{
     try{
-        const questions = await Response.findOne({user_id:req.body.user_id});
+        const questions = await Response.findOne({user_id:req.params.user_id});
         if(questions){
             res.status(200).json({
                 message:"Questions fetched!",
