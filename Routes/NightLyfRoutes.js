@@ -63,7 +63,7 @@ router.post("/create-admin",async (req,res,next)=>{
     }
 });
 
-router.post("/login",async(req,res)=>{
+router.post("/login",async(req,res,next)=>{
     try {
             const {username,password} = req.body;
             if(username !== "" && password !== ""){
@@ -75,19 +75,14 @@ router.post("/login",async(req,res)=>{
                         data:user
                     }).end();
                 }else{
-                    res.status(401).json({
-                        message:"Invalid password"
-                    }).end();
+                   next("Invalid password");
                 }
             }else{
-                res.status(400).json({
-                    message:`Username and password required`
-                }).end();
+                next(`Username and password required`)
+               
             }
     } catch (error) {
-        res.status(500).json({
-            message:error.message
-        }).end();
+        next(error.message);
     }
 });
 
