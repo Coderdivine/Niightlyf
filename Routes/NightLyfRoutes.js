@@ -99,7 +99,9 @@ router.post("/login",async(req,res,next)=>{
 });
 
 //create a post...
-router.post("/create-post",async(req,res,next)=>{
+router.post("/create-post",
+Decode,
+async(req,res,next)=>{
     try{
         let { title,description,user_id } = req.body;
         if(title){
@@ -114,7 +116,7 @@ router.post("/create-post",async(req,res,next)=>{
             if(saved){
                 res.status(201).json({
                     message:"New Anonymous created",
-                    share:`https://nightlyf.xyz/userId/postId`
+                    share:`https://nightlyf.netlify.com/answer/${question_id}`
                 }).end();
             }else{
                 next("Unable to create Anonymous. Try again");
@@ -165,7 +167,9 @@ router.post("/answer",async(req,res,next)=>{
 });
 
 //Get all responses...
-router.get("/get-response/:question_id",async(req,res,next)=>{
+router.get("/get-response/:question_id",
+Decode,
+async(req,res,next)=>{
     try{
         const answers = await Response.findOne({question_id:req.params.question_id});
         if(answers){
