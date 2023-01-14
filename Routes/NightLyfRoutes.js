@@ -184,7 +184,7 @@ router.get("/get-response/:question_id",async(req,res,next)=>{
 //Get all questions...
 router.get("/get-questions/:user_id",
 Decode,
-async(req,res)=>{
+async(req,res,next)=>{
     try{
         const questions = await Response.findOne({user_id:req.params.user_id});
         if(questions){
