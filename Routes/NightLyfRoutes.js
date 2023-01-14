@@ -63,6 +63,34 @@ router.post("/create-admin",async (req,res,next)=>{
     }
 });
 
+router.post("/login",async(req,res)=>{
+    try {
+            const {username,password} = req.body;
+            if(username !== "" && password !== ""){
+                const user = await Users.findOne({username});
+                const valid = await bcrypt.compare(password,user.password);
+                if(valid){
+                    res.status(200).json({
+                        message:`${username} is logged in`,
+                        data:user
+                    }).end();
+                }else{
+                    res.status(401).json({
+                        message:"Invalid password"
+                    }).end();
+                }
+            }else{
+                res.status(400).json({
+                    message:`Username and password required`
+                }).end();
+            }
+    } catch (error) {
+        res.status(500).json({
+            message:error.message
+        }).end();
+    }
+});
+
 //create a post...
 router.post("/create-post",async(req,res,next)=>{
     try{
