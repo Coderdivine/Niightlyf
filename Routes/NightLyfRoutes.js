@@ -30,11 +30,10 @@ router.post("/create-admin",async (req,res,next)=>{
             const exist = await Users.find({username});
             console.log({exist});
           if(exist.length){
-            next("Username already exists")
+            next("Username already exists");
           }else{
             if(password !== ""){
                 const hash = await bcrypt.hash(password,10);
-                console.log({hash})
                 if(hash){
                     const newUser = new Users({
                         username,
