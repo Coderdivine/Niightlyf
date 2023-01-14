@@ -6,6 +6,7 @@ const router = express.Router();
 const uuidv4 = require("uuid");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const Decode = require("../Public/Decode");
 const {
     Users,
     Response
@@ -41,11 +42,16 @@ router.post("/create-admin",async (req,res,next)=>{
                         password:hash
                     });
                     const saveRes = await newUser.save();
-                    const token = await jwt.sign({username,user_id},process.env.HASH)
-                    res.setHeader("Authorization",`Bearer ${token}`);
+                    const random = process.env.SIT; //maybe Object...
+                    const token = await jwt.sign({ username,password }, random, {
+                        expiresIn: '4d',
+                    });
+                    console.log({token});
                     if(saveRes){
                         res.status(201).json({
-                            message:`${username} was created!`
+                            message:`${username} was created!`,
+                            token,
+                            user_id
                         }).end();
                     }else{
                         next("Unable to create user please try Again!");
@@ -70,9 +76,15 @@ router.post("/login",async(req,res,next)=>{
                 const user = await Users.findOne({username});
                 const valid = await bcrypt.compare(password,user.password);
                 if(valid){
+                    const random = process.env.SIT; //maybe Object...
+                        const token = await jwt.sign({ user }, random, {
+                            expiresIn: '4d',
+                        });
+                        console.log({token});
                     res.status(200).json({
                         message:`${username} is logged in`,
-                        data:user
+                        data:user,
+                        token
                     }).end();
                 }else{
                    next("Invalid password");
@@ -170,7 +182,9 @@ router.get("/get-response/:question_id",async(req,res,next)=>{
 });
 
 //Get all questions...
-router.get("/get-questions/:user_id",async(req,res)=>{
+router.get("/get-questions/:user_id",
+Decode,
+async(req,res)=>{
     try{
         const questions = await Response.findOne({user_id:req.params.user_id});
         if(questions){
