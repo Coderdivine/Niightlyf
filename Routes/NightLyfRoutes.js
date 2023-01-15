@@ -203,7 +203,7 @@ router.get("/get-questions/:user_id",
 Decode,
 async(req,res,next)=>{
     try{
-        const questions = await Response.findOne({user_id:req.params.user_id});
+        const questions = await Response.find({user_id:req.params.user_id});
         console.log(questions);
         if(questions){
             res.status(200).json({
