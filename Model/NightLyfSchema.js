@@ -12,7 +12,7 @@ const AdminResponse = new Schema({
     },
     description:{
         type:String,
-        default:"Writ a secret anonymous to one will see"
+        default:"Write a secret anonymous to one will see"
     },
     question_id:{
         type:String,
@@ -20,13 +20,8 @@ const AdminResponse = new Schema({
     },
     responses:[
         {
-            text:{
-                type:String
-            },
-            date:{
-                type:Date,
-                default:Date.now()
-            }
+            text:String,
+            date:String
         }
     ]
 });

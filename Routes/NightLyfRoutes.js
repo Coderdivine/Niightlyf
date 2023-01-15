@@ -6,11 +6,13 @@ const router = express.Router();
 const uuidv4 = require("uuid");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const moment = require('moment');
 const Decode = require("../Public/Decode");
 const {
     Users,
     Response
 } = require("../Model/NightLyfSchema");
+const trace = require("../Public/IP");
 
 async function generateLetters() {
     const letters = 'abcdefghijklmnopqrstuvwxyz';
@@ -109,7 +111,9 @@ async(req,res,next)=>{
             const createPost = new Response({
                 user_id,question_id,
                 title,description,
-                response:[]
+                response:[
+                    { text: 'Good!', date: '15th January, 2023' }
+                ]
             });
             const saved = await createPost.save();
             console.log({saved});
@@ -132,16 +136,25 @@ async(req,res,next)=>{
 });
 
 //Answer anonymous...
-router.post("/answer",async(req,res,next)=>{
+router.post("/answer",
+trace,
+async(req,res,next)=>{
     try{
-        const { user_id,question_id,answer } = req.body;
-        if(user_id.length > 4){
+        const { question_id,answer } = req.body;
+        if(question_id.length > 4){
             if(question_id.length > 4){
                 const question = await Response.findOne({question_id});
+                console.log(question);
                 if(question){
-                question.responses = question.responses.push({
-                    text:answer
-                  });
+                    let now = moment(Date.now());
+                    const add = {
+                        text:answer,
+                        date:now.format('Do MMMM, YYYY')
+                      };
+                      console.log(question.responses);
+                question.responses = question.responses = [...question.responses, add];
+                //question.responses.push(add);
+                console.log(question.responses);
                   const saved = await question.save();
                   console.log({saved});
                   if(saved){

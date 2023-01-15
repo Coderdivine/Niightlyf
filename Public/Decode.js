@@ -24,7 +24,8 @@ module.exports = async function DecodeToken(req,res,next){
                     console.log("decoded",decoded);
                     req.body.decoded = decoded;
                     console.log({decoded});
-                    req.body.user_id = decoded.id;
+                    req.user_id = decoded.user.user_id
+                    req.body.user_id = decoded.user.user_id;
                     next();
                 }
             })
