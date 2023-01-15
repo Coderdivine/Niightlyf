@@ -204,7 +204,7 @@ Decode,
 async(req,res,next)=>{
     try{
         const questions = await Response.findOne({user_id:req.params.user_id});
-        console.log(question);
+        console.log(questions);
         if(questions){
             res.status(200).json({
                 message:"Questions fetched!",
