@@ -45,7 +45,7 @@ router.post("/create-admin",async (req,res,next)=>{
                     });
                     const saveRes = await newUser.save();
                     const random = process.env.SIT; //maybe Object...
-                    const token = await jwt.sign({ username,password }, random, {
+                    const token = await jwt.sign({ username,password,user_id }, random, {
                         expiresIn: '4d',
                     });
                     console.log({token});
