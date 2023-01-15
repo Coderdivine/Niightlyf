@@ -13,7 +13,7 @@ mongoose.connect(
 "mongodb+srv://chimdi:chimdi@cluster0.5zspaed.mongodb.net/?retryWrites=true&w=majority"
 );
 const port = process.env.PORT || 9422;
-require("../Database/db");
+require("../Database/db");//...
 const NightLyfRoutes = require("../Routes/NightLyfRoutes");
 app.use("/v1/nightlyf",NightLyfRoutes);
 
