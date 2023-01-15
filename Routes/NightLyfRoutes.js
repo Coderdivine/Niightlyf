@@ -211,7 +211,10 @@ async(req,res,next)=>{
                 data:questions
             }).end();
         }else{
-            next("Couldn't find data");
+            res.status(200).json({
+                message:"Questions fetched!",
+                data:[]
+            }).end();
         }
     }catch(error){
         next(error.message);
