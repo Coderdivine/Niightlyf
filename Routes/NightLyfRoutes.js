@@ -121,7 +121,7 @@ async(req,res,next)=>{
             if(saved){
                 res.status(201).json({
                     message:"New Anonymous created",
-                    share:`https://nightlyf.netlify.com/answer/${question_id}`
+                    share:`https://nightlyfs.netlify.com/answer/${question_id}`
                 }).end();
             }else{
                 next("Unable to create Anonymous. Try again");
